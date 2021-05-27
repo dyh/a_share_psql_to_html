@@ -1,0 +1,24 @@
+
+        <div class="container">
+			<h3 class="text-primary text-center"><%tic%> 持股 <%most_hold%> % 买卖 <%most_action%> %</h3>
+			<h4 class="text-center"><small>预测日期：<%date%></small></h4>
+			<p>&nbsp;</p>
+			<div class="panel panel-primary">
+				<div class="panel-heading">
+			        <h1 class="panel-title"><%tic%></h1>
+			    </div>
+
+				<table class="table">
+					<tr>
+						<th>序号</th>
+						<th>算法</th>
+						<th>验证周期</th>
+						<th>预测周期</th>
+						<th>买卖</th>
+						<th>持股</th>
+						<th>第几天</th>
+					</tr>
+					<%predict_result_table_tr_td%>
+				</table>
+			</div>
+		</div>
