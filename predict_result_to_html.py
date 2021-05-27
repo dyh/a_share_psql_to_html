@@ -5,6 +5,10 @@ from utils.datetime import get_week_day
 from utils.psqldb import Psqldb
 
 if __name__ == '__main__':
+
+    # 初始股票数量
+    initial_stocks = 100
+
     # 获取要输出到html的tic
     config.SINGLE_A_STOCK_CODE = ['sh.600036', ]
 
@@ -27,7 +31,7 @@ if __name__ == '__main__':
                 copy_text_card = text_card
 
                 # 获取数据库中最大日期
-                sql_cmd = f'SELECT "date" FROM "public"."{tic}" ORDER BY agent, vali_period_value ASC LIMIT 1'
+                sql_cmd = f'SELECT "date" FROM "public"."{tic}" ORDER BY "date" DESC LIMIT 1'
                 max_date = psql_object.fetchone(sql_cmd)
                 max_date = str(max_date[0])
 
@@ -61,19 +65,21 @@ if __name__ == '__main__':
                 copy_text_card = copy_text_card.replace('<%date%>', date1)
 
                 # 按 hold 分组，选出数量最多的 hold
-                sql_cmd = f'SELECT "hold", COUNT("id") as count1 ' \
+                sql_cmd = f'SELECT "hold", COUNT(id) as count1 ' \
                           f'FROM "public"."{tic}" WHERE "date" = \'{max_date}\' GROUP BY "hold"' \
-                          f' ORDER BY count1 DESC LIMIT 1'
+                          f' ORDER BY count1 DESC, "hold" DESC LIMIT 1'
 
                 max_hold = psql_object.fetchone(sql_cmd)[0]
+                max_hold = int(max_hold / initial_stocks * 100)
                 copy_text_card = copy_text_card.replace('<%most_hold%>', str(max_hold))
 
                 # 按 action 分组，取数量最多的 action
                 sql_cmd = f'SELECT "action", COUNT("id") as count1 ' \
                           f'FROM "public"."{tic}" WHERE "date" = \'{max_date}\' GROUP BY "action"' \
-                          f' ORDER BY count1 DESC LIMIT 1'
+                          f' ORDER BY count1 DESC, "action" DESC LIMIT 1'
 
                 max_action = psql_object.fetchone(sql_cmd)[0]
+                max_action = int(max_action / initial_stocks * 100)
                 copy_text_card = copy_text_card.replace('<%most_action%>', str(max_action))
 
                 # 表格
