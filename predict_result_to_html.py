@@ -92,7 +92,7 @@ if __name__ == '__main__':
         text_index_page_template = text_index_page_template.replace('<%page_title%>', 'A股预测')
 
         # 写入网页文件
-        with open('./index.html', 'w') as file_index:
+        with open(config.INDEX_HTML_PAGE_PATH, 'w') as file_index:
             file_index.write(text_index_page_template)
             pass
         pass
