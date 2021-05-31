@@ -10,7 +10,7 @@ if __name__ == '__main__':
     initial_stocks = 100
 
     # 获取要输出到html的tic
-    config.SINGLE_A_STOCK_CODE = ['sh.600036', ]
+    config.SINGLE_A_STOCK_CODE = ['sh.600667', 'sh.600036']
 
     # 从 index.html.template 文件中 读取 网页模板
     with open('./template/index.html.template', 'r') as index_page_template:
@@ -30,33 +30,43 @@ if __name__ == '__main__':
                 # 复制一个结果卡片模板，将以下信息 填充到卡片中
                 copy_text_card = text_card
 
+                # 获取数据库中最大hold，最大action，用于计算百分比
+                sql_cmd = f'SELECT abs("hold") FROM "public"."{tic}" ORDER BY abs("hold") DESC LIMIT 1'
+                max_hold = psql_object.fetchone(sql_cmd)
+                max_hold = max_hold[0]
+
+                # max_action
+                sql_cmd = f'SELECT abs("action") FROM "public"."{tic}" ORDER BY abs("action") DESC LIMIT 1'
+                max_action = psql_object.fetchone(sql_cmd)
+                max_action = max_action[0]
+
                 # 获取数据库中最大日期
                 sql_cmd = f'SELECT "date" FROM "public"."{tic}" ORDER BY "date" DESC LIMIT 1'
                 max_date = psql_object.fetchone(sql_cmd)
                 max_date = str(max_date[0])
 
                 # 用此最大日期查询出一批数据
-                sql_cmd = f'SELECT "id", "agent", "vali_period_value", "pred_period_name", "action", "hold", "day" ' \
+                sql_cmd = f'SELECT ROW_NUMBER() OVER() as rownum, "agent", "vali_period_value", "pred_period_name", "action", "hold", "day" ' \
                           f'FROM "public"."{tic}" WHERE "date" = \'{max_date}\' ORDER BY agent, vali_period_value ASC'
 
                 list_result = psql_object.fetchall(sql_cmd)
 
                 text_table_tr_td = ''
 
-                action_list = []
-                hold_list = []
-
                 for item_result in list_result:
                     # 替换字符串内容
                     copy_text_card = copy_text_card.replace('<%tic%>', tic)
                     id1, agent1, vali_period_value1, pred_period_name1, action1, hold1, day1 = item_result
 
-                    action_list.append(action1)
-                    hold_list.append(hold1)
+                    # 改为百分比
+                    action1 = round(action1 * 100 / max_action, 0)
+                    hold1 = round(hold1 * 100 / max_hold, 0)
+                    # agent1
+                    agent1 = agent1[5:]
 
                     text_table_tr_td += f'<tr><td>{id1}</td><td>{agent1}</td><td>{vali_period_value1}</td>' \
-                                        f'<td>{pred_period_name1}</td><td>{action1}</td>' \
-                                        f'<td>{hold1}</td><td>{day1}</td></tr>'
+                                        f'<td>{day1}/{pred_period_name1}</td><td>{action1}%</td>' \
+                                        f'<td>{hold1}%</td></tr>'
                     pass
                 pass
 
@@ -67,20 +77,20 @@ if __name__ == '__main__':
                 # 按 hold 分组，选出数量最多的 hold
                 sql_cmd = f'SELECT "hold", COUNT(id) as count1 ' \
                           f'FROM "public"."{tic}" WHERE "date" = \'{max_date}\' GROUP BY "hold"' \
-                          f' ORDER BY count1 DESC, "hold" DESC LIMIT 1'
+                          f' ORDER BY count1 DESC, abs("hold") DESC LIMIT 1'
 
-                max_hold = psql_object.fetchone(sql_cmd)[0]
-                max_hold = int(max_hold / initial_stocks * 100)
-                copy_text_card = copy_text_card.replace('<%most_hold%>', str(max_hold))
+                most_hold = psql_object.fetchone(sql_cmd)[0]
+                most_hold = round(most_hold * 100 / max_hold, 0)
+                copy_text_card = copy_text_card.replace('<%most_hold%>', str(most_hold))
 
                 # 按 action 分组，取数量最多的 action
                 sql_cmd = f'SELECT "action", COUNT("id") as count1 ' \
                           f'FROM "public"."{tic}" WHERE "date" = \'{max_date}\' GROUP BY "action"' \
-                          f' ORDER BY count1 DESC, "action" DESC LIMIT 1'
+                          f' ORDER BY count1 DESC, abs("action") DESC LIMIT 1'
 
-                max_action = psql_object.fetchone(sql_cmd)[0]
-                max_action = int(max_action / initial_stocks * 100)
-                copy_text_card = copy_text_card.replace('<%most_action%>', str(max_action))
+                most_action = psql_object.fetchone(sql_cmd)[0]
+                most_action = round(most_action * 100 / max_action, 0)
+                copy_text_card = copy_text_card.replace('<%most_action%>', str(most_action))
 
                 # 表格
                 all_text_card += copy_text_card.replace('<%predict_result_table_tr_td%>', text_table_tr_td)
