@@ -16,12 +16,12 @@
 
 				<table class="table">
 					<tr>
-						<th>序号</th>
-						<th>算法</th>
-						<th>验证周期</th>
-						<th>预测周期</th>
+						<th>回报率</th>
 						<th>买卖</th>
 						<th>持股</th>
+                        <th>算法</th>
+						<th>验证周期</th>
+						<th>预测周期</th>
 					</tr>
 					<%predict_result_table_tr_td%>
 				</table>

@@ -10,7 +10,7 @@ if __name__ == '__main__':
     initial_stocks = 100
 
     # 获取要输出到html的tic
-    config.SINGLE_A_STOCK_CODE = ['sh.600667', 'sh.600036']
+    config.SINGLE_A_STOCK_CODE = ['sh.600036', ]
 
     # 从 index.html.template 文件中 读取 网页模板
     with open('./template/index.html.template', 'r') as index_page_template:
@@ -46,8 +46,8 @@ if __name__ == '__main__':
                 max_date = str(max_date[0])
 
                 # 用此最大日期查询出一批数据
-                sql_cmd = f'SELECT ROW_NUMBER() OVER() as rownum, "agent", "vali_period_value", "pred_period_name", "action", "hold", "day" ' \
-                          f'FROM "public"."{tic}" WHERE "date" = \'{max_date}\' ORDER BY agent, vali_period_value ASC'
+                sql_cmd = f'SELECT ROW_NUMBER() OVER() as rownum, "agent", "vali_period_value", "pred_period_name", "action", "hold", "day" , "episode_return"' \
+                          f'FROM "public"."{tic}" WHERE "date" = \'{max_date}\' ORDER BY episode_return DESC'
 
                 list_result = psql_object.fetchall(sql_cmd)
 
@@ -56,7 +56,7 @@ if __name__ == '__main__':
                 for item_result in list_result:
                     # 替换字符串内容
                     copy_text_card = copy_text_card.replace('<%tic%>', tic)
-                    id1, agent1, vali_period_value1, pred_period_name1, action1, hold1, day1 = item_result
+                    id1, agent1, vali_period_value1, pred_period_name1, action1, hold1, day1, episode_return1 = item_result
 
                     # 改为百分比
                     action1 = round(action1 * 100 / max_action, 0)
@@ -64,9 +64,17 @@ if __name__ == '__main__':
                     # agent1
                     agent1 = agent1[5:]
 
-                    text_table_tr_td += f'<tr><td>{id1}</td><td>{agent1}</td><td>{vali_period_value1}</td>' \
-                                        f'<td>{day1}/{pred_period_name1}</td><td>{action1}%</td>' \
-                                        f'<td>{hold1}%</td></tr>'
+                    # 回报
+                    episode_return1 = round((episode_return1-1) * 100, 2)
+
+                    text_table_tr_td += f'<tr>' \
+                                        f'<td>{episode_return1}%</td>' \
+                                        f'<td>{action1}%</td>' \
+                                        f'<td>{hold1}%</td>' \
+                                        f'<td>{agent1}</td>' \
+                                        f'<td>{vali_period_value1}</td>' \
+                                        f'<td>{day1}/{pred_period_name1}</td>' \
+                                        f'</tr>'
                     pass
                 pass
 
