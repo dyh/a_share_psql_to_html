@@ -9,6 +9,8 @@
                 买卖 <%most_action%> %
             </h4>
 
+            <img src="https://image.sinajs.cn/newchart/daily/n/<%tic_no_dot%>.gif" alt="日K" width="100%"/>
+
 			<div class="panel panel-primary">
 				<div class="panel-heading">
 			        <h1 class="panel-title"><%tic%> <%date%> 详细信息</h1>

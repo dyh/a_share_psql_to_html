@@ -5,10 +5,6 @@ from utils.datetime import get_week_day
 from utils.psqldb import Psqldb
 
 if __name__ == '__main__':
-
-    # 初始股票数量
-    initial_stocks = 100
-
     # 获取要输出到html的tic
     config.SINGLE_A_STOCK_CODE = ['sh.600036', ]
 
@@ -56,6 +52,8 @@ if __name__ == '__main__':
                 for item_result in list_result:
                     # 替换字符串内容
                     copy_text_card = copy_text_card.replace('<%tic%>', tic)
+                    copy_text_card = copy_text_card.replace('<%tic_no_dot%>', tic.replace('.', ''))
+
                     id1, agent1, vali_period_value1, pred_period_name1, action1, hold1, day1, episode_return1 = item_result
 
                     # 改为百分比
@@ -72,8 +70,8 @@ if __name__ == '__main__':
                                         f'<td>{action1}%</td>' \
                                         f'<td>{hold1}%</td>' \
                                         f'<td>{agent1}</td>' \
-                                        f'<td>{vali_period_value1}</td>' \
-                                        f'<td>{day1}/{pred_period_name1}</td>' \
+                                        f'<td>{vali_period_value1}天</td>' \
+                                        f'<td>第{day1}/{pred_period_name1}天</td>' \
                                         f'</tr>'
                     pass
                 pass
