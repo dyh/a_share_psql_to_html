@@ -18,7 +18,7 @@
 
 				<table class="table">
 					<tr>
-						<th>回报率</th>
+						<th>回报率/低买高卖价差</th>
 						<th>买卖</th>
 						<th>持股</th>
                         <th>算法</th>
