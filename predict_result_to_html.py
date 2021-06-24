@@ -8,6 +8,9 @@ if __name__ == '__main__':
     # 获取要输出到html的tic
     config.SINGLE_A_STOCK_CODE = ['sh.600036', ]
 
+    # 交易详情
+    text_trade_detail = ''
+
     # 从 index.html.template 文件中 读取 网页模板
     with open('./template/index.html.template', 'r') as index_page_template:
         text_index_page_template = index_page_template.read()
@@ -42,8 +45,8 @@ if __name__ == '__main__':
                 max_date = str(max_date[0])
 
                 # 用此最大日期查询出一批数据
-                sql_cmd = f'SELECT ROW_NUMBER() OVER() as rownum, "agent", "vali_period_value", "pred_period_name", "action", "hold", "day", "episode_return", "max_return"' \
-                          f'FROM "public"."{tic}" WHERE "date" = \'{max_date}\' ORDER BY episode_return DESC'
+                sql_cmd = f'SELECT ROW_NUMBER() OVER() as rownum, "agent", "vali_period_value", "pred_period_name", "action", "hold", "day", "episode_return", "max_return", "trade_detail" ' \
+                          f' FROM "public"."{tic}" WHERE "date" = \'{max_date}\' ORDER BY episode_return DESC'
 
                 list_result = psql_object.fetchall(sql_cmd)
 
@@ -54,7 +57,10 @@ if __name__ == '__main__':
                     copy_text_card = copy_text_card.replace('<%tic%>', tic)
                     copy_text_card = copy_text_card.replace('<%tic_no_dot%>', tic.replace('.', ''))
 
-                    id1, agent1, vali_period_value1, pred_period_name1, action1, hold1, day1, episode_return1, max_return1 = item_result
+                    id1, agent1, vali_period_value1, pred_period_name1, action1, hold1, day1, episode_return1, max_return1, trade_detail1 = item_result
+
+                    # <%day%>
+                    copy_text_card = copy_text_card.replace('<%day%>', day1)
 
                     # 改为百分比
                     action1 = round(action1 * 100 / max_action, 0)
@@ -74,6 +80,19 @@ if __name__ == '__main__':
                                         f'<td>{vali_period_value1}天</td>' \
                                         f'<td>第{day1}/{pred_period_name1}天</td>' \
                                         f'</tr>'
+
+                    # 交易详情，trade_detail1，保存为独立文件
+
+                    text_trade_detail += f'\r\n{"-" * 20} {agent1} {vali_period_value1}天 {"-" * 20}\r\n'
+                    text_trade_detail += f'{episode_return1}% / {max_return1}% ' \
+                                         f' {action1}% ' \
+                                         f' {hold1}% ' \
+                                         f' {agent1} ' \
+                                         f' {vali_period_value1}天 ' \
+                                         f' 第{day1}/{pred_period_name1}天\r\n'
+
+                    text_trade_detail += '\r\n交易详情\r\n\r\n'
+                    text_trade_detail += trade_detail1
                     pass
                 pass
 
@@ -102,6 +121,14 @@ if __name__ == '__main__':
                 # 表格
                 all_text_card += copy_text_card.replace('<%predict_result_table_tr_td%>', text_table_tr_td)
                 all_text_card += '\r\n'
+
+                if text_trade_detail is not '':
+                    # 写入交易详情文件
+                    with open(f'./{tic}.txt', 'w') as file_detail:
+                        file_detail.write(text_trade_detail)
+                        pass
+                    pass
+                pass
             pass
             psql_object.close()
         pass
