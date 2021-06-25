@@ -60,7 +60,7 @@ if __name__ == '__main__':
                     id1, agent1, vali_period_value1, pred_period_name1, action1, hold1, day1, episode_return1, max_return1, trade_detail1 = item_result
 
                     # <%day%>
-                    copy_text_card = copy_text_card.replace('<%day%>', day1)
+                    copy_text_card = copy_text_card.replace('<%day%>', str(day1))
 
                     # 改为百分比
                     action1 = round(action1 * 100 / max_action, 0)
@@ -102,7 +102,7 @@ if __name__ == '__main__':
 
                 # 按 hold 分组，选出数量最多的 hold
                 sql_cmd = f'SELECT "hold", COUNT(id) as count1 ' \
-                          f'FROM "public"."{tic}" WHERE "date" = \'{max_date}\' GROUP BY "hold"' \
+                          f'FROM "public"."{tic}" WHERE "date" = \'{max_date}\' AND "episode_return" > 1 GROUP BY "hold"' \
                           f' ORDER BY count1 DESC, abs("hold") DESC LIMIT 1'
 
                 most_hold = psql_object.fetchone(sql_cmd)[0]
@@ -111,7 +111,7 @@ if __name__ == '__main__':
 
                 # 按 action 分组，取数量最多的 action
                 sql_cmd = f'SELECT "action", COUNT("id") as count1 ' \
-                          f'FROM "public"."{tic}" WHERE "date" = \'{max_date}\' GROUP BY "action"' \
+                          f'FROM "public"."{tic}" WHERE "date" = \'{max_date}\' AND "episode_return" > 1 GROUP BY "action"' \
                           f' ORDER BY count1 DESC, abs("action") DESC LIMIT 1'
 
                 most_action = psql_object.fetchone(sql_cmd)[0]
@@ -124,7 +124,10 @@ if __name__ == '__main__':
 
                 if text_trade_detail is not '':
                     # 写入交易详情文件
-                    with open(f'./{tic}.txt', 'w') as file_detail:
+
+                    detail_file_path = config.INDEX_HTML_PAGE_PATH.replace('index.html', f'{tic}.txt')
+
+                    with open(detail_file_path, 'w') as file_detail:
                         file_detail.write(text_trade_detail)
                         pass
                     pass
