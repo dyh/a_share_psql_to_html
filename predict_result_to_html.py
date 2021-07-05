@@ -102,7 +102,7 @@ if __name__ == '__main__':
 
                 # 按 hold 分组，选出数量最多的 hold
                 sql_cmd = f'SELECT "hold", COUNT(id) as count1 ' \
-                          f'FROM "public"."{tic}" WHERE "date" = \'{max_date}\' AND "episode_return" > 1 GROUP BY "hold"' \
+                          f'FROM "public"."{tic}" WHERE "date" = \'{max_date}\' AND "episode_return" > 1.10 GROUP BY "hold"' \
                           f' ORDER BY count1 DESC, abs("hold") DESC LIMIT 1'
 
                 most_hold = psql_object.fetchone(sql_cmd)[0]
@@ -111,7 +111,7 @@ if __name__ == '__main__':
 
                 # 按 action 分组，取数量最多的 action
                 sql_cmd = f'SELECT "action", COUNT("id") as count1 ' \
-                          f'FROM "public"."{tic}" WHERE "date" = \'{max_date}\' AND "episode_return" > 1 GROUP BY "action"' \
+                          f'FROM "public"."{tic}" WHERE "date" = \'{max_date}\' AND "episode_return" > 1.10 GROUP BY "action"' \
                           f' ORDER BY count1 DESC, abs("action") DESC LIMIT 1'
 
                 most_action = psql_object.fetchone(sql_cmd)[0]
