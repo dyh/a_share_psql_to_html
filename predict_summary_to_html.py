@@ -81,18 +81,16 @@ if __name__ == '__main__':
                 max_return1 = round((max_return1 - 1) * 100, 2)
 
                 text_table_tr_td += f'<tr>' \
-                                    f'<td>{id1}</td>' \
-                                    f'<td>{date1}</td>' \
                                     f'<td>{tic1}</td>' \
                                     f'<td>{name1}</td>' \
-                                    f'<td>{episode_return1}%</td>' \
-                                    f'<td>{max_return1}%</td>' \
                                     f'<td>{action1}%</td>' \
                                     f'<td>{hold1}%</td>' \
                                     f'<td>{agent1}</td>' \
-                                    f'<td>{day1}</td>' \
                                     f'<td>{vali_period_value1}</td>' \
+                                    f'<td>{day1}</td>' \
                                     f'<td>{pred_period_name1}</td>' \
+                                    f'<td>{episode_return1}%</td>' \
+                                    f'<td>{max_return1}%</td>' \
                                     f'</tr>'
 
                 # 交易详情，trade_detail1，保存为独立文件
@@ -109,10 +107,6 @@ if __name__ == '__main__':
                 pass
             pass
 
-            # 日期
-            # date1 = max_date + ' ' + get_week_day(max_date)
-            # copy_text_card = copy_text_card.replace('<%date%>', date1)
-
             # 表格
             all_text_card += copy_text_card.replace('<%predict_result_table_tr_td%>', text_table_tr_td)
             all_text_card += '\r\n'
@@ -124,10 +118,14 @@ if __name__ == '__main__':
         # 将多个 卡片模板 替换到 网页模板
         text_index_page_template = text_index_page_template.replace('<%page_content%>', all_text_card)
 
+        # 日期
+        date1 = max_date + ' ' + get_week_day(max_date)
+        text_index_page_template = text_index_page_template.replace('<%date%>', date1)
+
         current_time_point = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
         text_index_page_template = text_index_page_template.replace('<%page_time_point%>', current_time_point)
 
-        text_index_page_template = text_index_page_template.replace('<%page_title%>', 'A股预测')
+        text_index_page_template = text_index_page_template.replace('<%page_title%>', 'A股决策')
 
         if text_trade_detail is not '':
             # 写入交易详情文件

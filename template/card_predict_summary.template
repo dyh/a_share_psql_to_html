@@ -1,24 +1,18 @@
 
         <div class="container">
-			<h4 class="text-primary text-center">
-			
-            </h4>
-
-			<div class="panel panel-primary">
-				<table class="table table-condensed">
+			<div class="table-responsive">
+				<table class="table table-sm table-bordered table-dark table-hover">
 					<tr>
-						<th>序号</th>
-						<th>日期</th>
 						<th>代码</th>
 						<th>名称</th>
-						<th>T-1回报率</th>
-						<th>低买高卖价差</th>
 						<th>买卖</th>
 						<th>持仓</th>
                         <th>算法</th>
-						<th>第几天</th>
 						<th>验证周期</th>
+						<th>第几天</th>
 						<th>预测周期</th>
+						<th>T-1回报率</th>
+						<th>低买高卖价差</th>
 					</tr>
 					<%predict_result_table_tr_td%>
 				</table>
