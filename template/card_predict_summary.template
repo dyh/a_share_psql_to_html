@@ -5,16 +5,18 @@
             </h4>
 
 			<div class="panel panel-primary">
-				<div class="panel-heading">
-			        <h1 class="panel-title"><%tic%> <%date%> 持股 <%most_hold%> % 买卖 <%most_action%> %</h1>
-			    </div>
-
-				<table class="table">
+				<table class="table table-condensed">
 					<tr>
-						<th>T-1回报率/低买高卖价差</th>
+						<th>序号</th>
+						<th>日期</th>
+						<th>代码</th>
+						<th>名称</th>
+						<th>T-1回报率</th>
+						<th>低买高卖价差</th>
 						<th>买卖</th>
-						<th>持股</th>
+						<th>持仓</th>
                         <th>算法</th>
+						<th>第几天</th>
 						<th>验证周期</th>
 						<th>预测周期</th>
 					</tr>

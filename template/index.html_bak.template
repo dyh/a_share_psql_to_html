@@ -22,7 +22,7 @@
 		</nav>
 
         <h4 class="text-primary text-center">
-
+            <a href='trade_detail.txt' target="_blank">[ 点击查看 <%day%> 天预测交易详情 ]</a>
         </h4>
 
 <%page_content%>

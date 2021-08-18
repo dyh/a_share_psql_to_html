@@ -1,6 +1,8 @@
 # index.html 目标路径
 # INDEX_HTML_PAGE_PATH = '/var/www/html/a/index.html'
-INDEX_HTML_PAGE_PATH = './index.html'
+INDEX_HTML_PAGE_PATH = './html/index.html'
+
+BATCH_A_STOCK_CODE = []
 
 # PostgreSQL
 PSQL_HOST = "192.168.192.1"
