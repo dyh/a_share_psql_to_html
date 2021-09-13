@@ -1,7 +1,7 @@
 import time
 
 import config
-from utils.datetime import get_week_day
+from utils.date_time import get_week_day
 from utils.psqldb import Psqldb
 
 if __name__ == '__main__':

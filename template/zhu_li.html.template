@@ -4,6 +4,7 @@
 		<meta charset="utf-8">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta http-equiv="refresh" content="60">
 		<title><%page_title%> <%date%></title>
 		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet">
 		<link rel="shortcut icon" href="#" />
@@ -14,7 +15,7 @@
 	  		<div class="container-fluid">
 				<span class="text-light"></span>
 				<span class="navbar-brand text-light">
-				    <%page_title%> <%date%> <a class="text-light" href="trade_detail.txt" target="_blank">交易详情</a>
+				    <%page_title%> <%date%> <small>页面生成时间 <%page_time_point%></small>
 				</span>
 				<button type="button" class="btn btn-sm btn-outline-success" onclick="location.reload(true)">刷新</button>
 	  		</div>
@@ -22,6 +23,5 @@
 
         <%page_content%>
 
-        <p class="text-center text-light"><small>页面生成时间 <%page_time_point%></small></p>
 	</body>
 </html>

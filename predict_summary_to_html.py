@@ -1,7 +1,7 @@
 import time
 
 import config
-from utils.datetime import get_week_day
+from utils.date_time import get_week_day
 from utils.psqldb import Psqldb
 
 if __name__ == '__main__':
@@ -29,15 +29,15 @@ if __name__ == '__main__':
             # 复制一个结果卡片模板，将以下信息 填充到卡片中
             copy_text_card = text_card
 
-            # 获取数据库中最大hold，最大action，用于计算百分比
-            sql_cmd = f'SELECT abs("hold") FROM "public"."{table_name}" ORDER BY abs("hold") DESC LIMIT 1'
-            max_hold = psql_object.fetchone(sql_cmd)
-            max_hold = max_hold[0]
-
-            # max_action
-            sql_cmd = f'SELECT abs("action") FROM "public"."{table_name}" ORDER BY abs("action") DESC LIMIT 1'
-            max_action = psql_object.fetchone(sql_cmd)
-            max_action = max_action[0]
+            # # 获取数据库中最大hold，最大action，用于计算百分比
+            # sql_cmd = f'SELECT abs("hold") FROM "public"."{table_name}" ORDER BY abs("hold") DESC LIMIT 1'
+            # max_hold = psql_object.fetchone(sql_cmd)
+            # max_hold = max_hold[0]
+            #
+            # # max_action
+            # sql_cmd = f'SELECT abs("action") FROM "public"."{table_name}" ORDER BY abs("action") DESC LIMIT 1'
+            # max_action = psql_object.fetchone(sql_cmd)
+            # max_action = max_action[0]
 
             # 获取数据库中最大日期
             sql_cmd = f'SELECT "date" FROM "public"."{table_name}" ORDER BY "date" DESC LIMIT 1'
@@ -64,14 +64,17 @@ if __name__ == '__main__':
                 # <%day%>
                 # copy_text_card = copy_text_card.replace('<%day%>', str(day1))
 
-                # 改为百分比
-                if max_action != 0:
-                    action1 = round(action1 * 100 / max_action, 0)
-                    hold1 = round(hold1 * 100 / max_hold, 0)
-                else:
-                    action1 = 0
-                    hold1 = 0
-                pass
+                # # 改为百分比
+                # if max_action != 0:
+                #     action1 = round(action1 * 100 / max_action, 0)
+                #     hold1 = round(hold1 * 100 / max_hold, 0)
+                # else:
+                #     action1 = 0
+                #     hold1 = 0
+                # pass
+
+                action1 = round(action1, 0)
+                hold1 = round(hold1, 0)
 
                 # agent1
                 agent1 = agent1[5:]
@@ -83,8 +86,8 @@ if __name__ == '__main__':
                 text_table_tr_td += f'<tr>' \
                                     f'<td>{tic1}</td>' \
                                     f'<td>{name1}</td>' \
-                                    f'<td>{action1}%</td>' \
-                                    f'<td>{hold1}%</td>' \
+                                    f'<td>{action1}</td>' \
+                                    f'<td>{hold1}</td>' \
                                     f'<td>{agent1}</td>' \
                                     f'<td>{vali_period_value1}</td>' \
                                     f'<td>{day1}</td>' \
@@ -96,8 +99,8 @@ if __name__ == '__main__':
                 # 交易详情，trade_detail1，保存为独立文件
                 text_trade_detail += f'\r\n{"-" * 20} {agent1} {vali_period_value1}天 {"-" * 20}\r\n'
                 text_trade_detail += f'{episode_return1}% / {max_return1}% ' \
-                                     f' {action1}% ' \
-                                     f' {hold1}% ' \
+                                     f' {action1} ' \
+                                     f' {hold1} ' \
                                      f' {agent1} ' \
                                      f' {vali_period_value1}天 ' \
                                      f' 第{day1}/{pred_period_name1}天\r\n'
