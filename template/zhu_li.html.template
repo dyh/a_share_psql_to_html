@@ -15,7 +15,7 @@
 	  		<div class="container-fluid">
 				<span class="text-light"></span>
 				<span class="navbar-brand text-light">
-				    <%page_title%> <%date%> <small>页面生成时间 <%page_time_point%></small>
+				    <%page_title%> <%date%> <small>数据更新时间 <%page_time_point%></small>
 				</span>
 				<button type="button" class="btn btn-sm btn-outline-success" onclick="location.reload(true)">刷新</button>
 	  		</div>

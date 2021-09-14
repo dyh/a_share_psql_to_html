@@ -11,6 +11,9 @@ if __name__ == '__main__':
 
         all_text_card = ''
 
+        # 数据更新时间点
+        sync_time_point = ''
+
         # 从 card_predict_result.template 文件中 读取 结果卡片 模板
         with open('./template/card_zhu_li_summary.template', 'r', encoding='utf-8') as result_card_template:
 
@@ -91,6 +94,11 @@ if __name__ == '__main__':
             all_text_card += copy_text_card.replace('<%predict_result_table_tr_td%>', text_table_tr_td)
             all_text_card += '\r\n'
 
+            # 数据更新时间点
+            sync_time_table_name = 'zhu_li_sync_time_point'
+            sql_cmd = f'SELECT "sync_time_point" FROM "public"."{sync_time_table_name}"'
+            sync_time_point = str(psql_object.fetchone(sql_cmd)[0])
+
             pass
             psql_object.close()
         pass
@@ -102,8 +110,9 @@ if __name__ == '__main__':
         # date1 = max_date + ' ' + get_week_day(max_date)
         text_index_page_template = text_index_page_template.replace('<%date%>', '')
 
-        current_time_point = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
-        text_index_page_template = text_index_page_template.replace('<%page_time_point%>', current_time_point)
+        # 加载数据更新时间
+        # current_time_point = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
+        text_index_page_template = text_index_page_template.replace('<%page_time_point%>', sync_time_point)
 
         text_index_page_template = text_index_page_template.replace('<%page_title%>', '主力控盘')
 
